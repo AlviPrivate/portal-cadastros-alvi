@@ -1,0 +1,17 @@
+PORTAL DE CADASTROS - ALVI PRIVATE
+
+1. Extraia toda a pasta do arquivo ZIP.
+2. Não mova apenas o index.html: os quatro formulários precisam permanecer na mesma pasta.
+3. Abra o arquivo index.html no Google Chrome.
+4. Clique em "Abrir no portal" para usar o formulário dentro de uma janela.
+5. O botão "Nova aba" abre o formulário separadamente.
+
+Arquivos incluídos:
+- index.html
+- cadastro-locatario.html
+- cadastro-locador.html
+- cadastro-fiador-pf.html
+- cadastro-fiador-pj.html
+- logo-alvi.png
+
+- proposta-locacao.html
