@@ -121,7 +121,7 @@
             <button class="btn btn-primary" onclick="openForm('cadastro-locatario.html','Cadastro de Locatário')">Abrir no portal</button>
             <a class="btn btn-secondary" href="cadastro-locatario.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('cadastro-locatario.html','Cadastro de Locatário')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('cadastro-locatario.html','Cadastro de Locatário')">📤 Compartilhar com Cliente</button>
         </article>
         <article class="card">
           <div class="card-top"><div class="icon">▣</div><span class="status">Disponível</span></div>
@@ -131,7 +131,7 @@
             <button class="btn btn-primary" onclick="openForm('cadastro-locatario-pj.html','Locatário — Pessoa Jurídica')">Abrir no portal</button>
             <a class="btn btn-secondary" href="cadastro-locatario-pj.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('cadastro-locatario-pj.html','Cadastro de Locatário — Pessoa Jurídica')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('cadastro-locatario-pj.html','Cadastro de Locatário — Pessoa Jurídica')">📤 Compartilhar com Cliente</button>
         </article>
         <article class="card">
           <div class="card-top"><div class="icon">⌂</div><span class="status">Disponível</span></div>
@@ -141,7 +141,7 @@
             <button class="btn btn-primary" onclick="openForm('cadastro-locador.html','Cadastro de Locador')">Abrir no portal</button>
             <a class="btn btn-secondary" href="cadastro-locador.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('cadastro-locador.html','Cadastro de Locador')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('cadastro-locador.html','Cadastro de Locador')">📤 Compartilhar com Cliente</button>
         </article>
         <article class="card">
           <div class="card-top"><div class="icon">♙</div><span class="status">Disponível</span></div>
@@ -151,7 +151,7 @@
             <button class="btn btn-primary" onclick="openForm('cadastro-fiador-pf.html','Fiador — Pessoa Física')">Abrir no portal</button>
             <a class="btn btn-secondary" href="cadastro-fiador-pf.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('cadastro-fiador-pf.html','Fiador — Pessoa Física')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('cadastro-fiador-pf.html','Fiador — Pessoa Física')">📤 Compartilhar com Cliente</button>
         </article>
         <article class="card">
           <div class="card-top"><div class="icon">▦</div><span class="status">Disponível</span></div>
@@ -161,7 +161,7 @@
             <button class="btn btn-primary" onclick="openForm('cadastro-fiador-pj.html','Fiador — Pessoa Jurídica')">Abrir no portal</button>
             <a class="btn btn-secondary" href="cadastro-fiador-pj.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('cadastro-fiador-pj.html','Fiador — Pessoa Jurídica')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('cadastro-fiador-pj.html','Fiador — Pessoa Jurídica')">📤 Compartilhar com Cliente</button>
         </article>
         <article class="card">
           <div class="card-top"><div class="icon">📝</div><span class="status">Disponível</span></div>
@@ -171,7 +171,7 @@
             <button class="btn btn-primary" onclick="openForm('proposta-locacao.html','Proposta de Locação')">Abrir no portal</button>
             <a class="btn btn-secondary" href="proposta-locacao.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('proposta-locacao.html','Proposta de Locação')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('proposta-locacao.html','Proposta de Locação')">📤 Compartilhar com Cliente</button>
         </article>
 
         <article class="card">
@@ -182,7 +182,7 @@
             <button class="btn btn-primary" onclick="openForm('proposta-venda.html','Proposta de Venda')">Abrir no portal</button>
             <a class="btn btn-secondary" href="proposta-venda.html" target="_blank">Nova aba</a>
           </div>
-          <button class="btn copy-link-btn" type="button" onclick="copyFormLink('proposta-venda.html','Proposta de Venda')">📋 Copiar link para o cliente</button>
+          <button class="btn copy-link-btn" type="button" onclick="shareWithClient('proposta-venda.html','Proposta de Venda')">📤 Compartilhar com Cliente</button>
         </article>
       </div>
     </section>
@@ -231,28 +231,57 @@
       portalToast.className = 'portal-toast '+type+' show';
       portalToastTimer = setTimeout(()=>portalToast.classList.remove('show'),3200);
     }
-    async function copyFormLink(file,label){
-      const link = new URL(file,PORTAL_BASE_URL).href;
-      try{
-        if(navigator.clipboard && window.isSecureContext){
-          await navigator.clipboard.writeText(link);
-        }else{
-          const area=document.createElement('textarea');
-          area.value=link;
-          area.style.position='fixed';
-          area.style.opacity='0';
-          document.body.appendChild(area);
-          area.focus();
-          area.select();
-          const ok=document.execCommand('copy');
-          area.remove();
-          if(!ok) throw new Error('copy failed');
-        }
-        showPortalToast('Link de '+label+' copiado. Agora é só enviar ao cliente.');
-      }catch(error){
-        showPortalToast('Não foi possível copiar automaticamente. Link: '+link,'error');
+    function buildClientMessage(file,label){
+      const link = new URL(file, PORTAL_BASE_URL).href;
+      return `Olá! Tudo bem?\n\nPara darmos continuidade ao seu atendimento, pedimos a gentileza de preencher o formulário abaixo.\n\n📄 *${label}*\n\n${link}\n\nApós finalizar o preenchimento, clique em “Gerar PDF” e encaminhe o documento ao corretor responsável.\n\nCaso tenha qualquer dúvida, nossa equipe estará à disposição.\n\nAtenciosamente,\n\n*Equipe Alvi Private Inteligência Imobiliária*\n📞 (11) 92097-0099`;
+    }
+
+    function legacyCopy(text){
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.setAttribute('readonly','');
+      area.style.position = 'fixed';
+      area.style.left = '-9999px';
+      area.style.top = '0';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      area.setSelectionRange(0, area.value.length);
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (_) { ok = false; }
+      area.remove();
+      return ok;
+    }
+
+    function shareWithClient(file,label){
+      const message = buildClientMessage(file,label);
+
+      // Primeiro tenta a cópia síncrona: funciona melhor diretamente no clique.
+      if(legacyCopy(message)){
+        showPortalToast('Mensagem copiada! Agora é só colar no WhatsApp.');
+        return;
+      }
+
+      // Fallback moderno para navegadores que bloqueiam execCommand.
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(message)
+          .then(()=>showPortalToast('Mensagem copiada! Agora é só colar no WhatsApp.'))
+          .catch(()=>showCopyDialog(message));
+      }else{
+        showCopyDialog(message);
       }
     }
+
+    function showCopyDialog(message){
+      const manual = window.prompt('Copie a mensagem abaixo e envie ao cliente:', message);
+      if(manual !== null){
+        showPortalToast('Mensagem pronta para envio.');
+      }else{
+        showPortalToast('Não foi possível copiar automaticamente.','error');
+      }
+    }
+
     function openForm(url,label){
       title.textContent = label;
       externalLink.href = url;
